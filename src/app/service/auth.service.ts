@@ -79,9 +79,7 @@ export class AuthService {
   }
 
   logout(): void {
-    const csrfToken = this.xsrfTokenExtractor.getToken();
-
-    const headers = new HttpHeaders({ 'X-XSRF-TOKEN': csrfToken || '' });
+    const headers = this.getCsrfHeaders();
 
     this.http
       .post(
@@ -104,6 +102,13 @@ export class AuthService {
           );
         },
       });
+  }
+
+  getCsrfHeaders(): HttpHeaders {
+    const csrfToken = this.xsrfTokenExtractor.getToken();
+    return new HttpHeaders({
+      'X-XSRF-TOKEN': csrfToken || ''
+    });
   }
 
   private fetchCsrfToken(): void {

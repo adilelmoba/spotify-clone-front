@@ -5,6 +5,8 @@ import { RouterOutlet } from '@angular/router';
 import { NavigationComponent } from "./layout/navigation/navigation.component";
 import { LibraryComponent } from "./layout/library/library.component";
 import { HeaderComponent } from "./layout/header/header.component";
+import { ToastService } from './service/toast.service';
+import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,8 @@ import { HeaderComponent } from "./layout/header/header.component";
     FontAwesomeModule,
     NavigationComponent,
     LibraryComponent,
-    HeaderComponent
+    HeaderComponent,
+    NgbToastModule,
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
@@ -22,9 +25,12 @@ import { HeaderComponent } from "./layout/header/header.component";
 export class AppComponent implements OnInit {
   
   private faIconLibrary = inject(FaIconLibrary);
+  
+  toastService = inject(ToastService);
 
   ngOnInit(): void {
     this.initFontAwesome();
+    // this.toastService.show('Welcome to the Music App!', 'DANGER');
   }
 
   private initFontAwesome() {
