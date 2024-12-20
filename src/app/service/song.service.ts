@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { SaveSong } from './model/song.model';
+import { ReadSong, SaveSong } from './model/song.model';
 import { State } from './model/state.model';
 import { environment } from '../../environments/environment.development';
 import { AuthService } from './auth.service';
@@ -15,6 +15,9 @@ export class SongService {
 
   private add$: WritableSignal<State<SaveSong, HttpErrorResponse>> = signal(State.Builder<SaveSong, HttpErrorResponse>().forInit().build());
   addSig = computed(() => this.add$());
+
+  private getAll$: WritableSignal<State<Array<ReadSong>, HttpErrorResponse>> = signal(State.Builder<Array<ReadSong>, HttpErrorResponse>().forInit().build());
+  getAllSig = computed(() => this.getAll$());
 
   add(song: SaveSong): void {
     const formData = new FormData();
@@ -41,6 +44,20 @@ export class SongService {
 
   reset(): void {
     this.add$.set(State.Builder<SaveSong, HttpErrorResponse>().forInit().build());
+  }
+
+  getAll(): void {
+    const headers = this.authService.getCsrfHeaders();
+
+    this.http.get<Array<ReadSong>>(`${environment.API_URL}/api/songs`, { headers, withCredentials: true })
+      .subscribe({
+        next: (songs) => {
+          this.getAll$.set(State.Builder<Array<ReadSong>, HttpErrorResponse>().forSuccess(songs).build());
+        },
+        error: (error: HttpErrorResponse) => {
+          this.getAll$.set(State.Builder<Array<ReadSong>, HttpErrorResponse>().forError(error).build());
+        },
+      });
   }
 
   constructor() { }

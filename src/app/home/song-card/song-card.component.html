@@ -1,0 +1,21 @@
+<div 
+  class="" 
+  (mouseover)="onHoverPlay(true)"
+  (mouseleave)="onHoverPlay(false)"
+>
+  <div class="card-body">
+    <img 
+      class="card-img-top card-img-bottom" 
+      [alt]="songDisplay.title?.value + ' Cover'" 
+      [src]="'data:' + songDisplay.coverContentType + ';base64,' + songDisplay.cover"
+    />
+    <h5 class="title mt-3">{{ songDisplay.title?.value }}</h5>
+    <p class="author">{{ songDisplay.author?.value }}</p>
+  </div>
+
+  @if(songDisplay.displayPlay) {
+    <div class="play position-absolute d-flex align-items-center" [@inOutAnimation] >
+      <fa-icon [icon]="'circle-play'" class="text-primary" ></fa-icon>
+    </div>
+  }
+</div>
